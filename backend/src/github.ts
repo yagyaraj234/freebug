@@ -12,4 +12,5 @@ export interface PullRequestWebhook {
   action: string
   repository: { full_name: string }
   pull_request: { number: number; head?: { repo?: { clone_url?: string } } }
+  installation?: { id: number }
 }

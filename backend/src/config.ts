@@ -23,6 +23,8 @@ const ConfigSchema = z
     GITHUB_WEBHOOK_PROXY_URL: optionalUrl,
     GITHUB_TARGET_URL: optionalUrl,
     CONVEX_URL: z.string().url().or(z.literal('')).default(''),
+    AUTH_SECRET: z.string().default('dev-secret-change-me'),
+    AUTH_BRIDGE_SECRET: z.string().default(''),
     REDIS_URL: z.string().default('redis://localhost:6379'),
     ARTIFACT_DIR: z.string().default('./data/artifacts'),
     PLANNER_AGENTS: z.string().default('smoke,functional,accessibility'),

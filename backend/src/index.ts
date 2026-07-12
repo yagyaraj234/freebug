@@ -13,7 +13,8 @@ import { RunPipeline } from './pipeline.js';
 import { OpenAIPlanner } from './planner.js';
 import { PlaywrightExecutor } from './runner.js';
 import { MemoryRunStore } from './store.js';
-import { ConvexWaitlistStore, MemoryWaitlistStore } from './waitlist.js';
+import { ConvexUserStore, MemoryUserStore } from './users.js';
+import { GitHubApp } from './github-app.js';
 const config = loadConfig(),
   store = new MemoryRunStore(),
   events = new InMemoryEventBus(),
@@ -52,10 +53,15 @@ new RunPipeline({
   publicBaseUrl: config.PUBLIC_BASE_URL,
   billing: billingStore,
 }).start();
-const waitlist = config.CONVEX_URL
-  ? new ConvexWaitlistStore(config.CONVEX_URL)
-  : new MemoryWaitlistStore();
-const app = createApp({ config, store, events, waitlist, billing });
+const users = config.CONVEX_URL
+  ? new ConvexUserStore(config.CONVEX_URL, config.AUTH_BRIDGE_SECRET)
+  : new MemoryUserStore();
+const githubApp = new GitHubApp(
+  config.GITHUB_APP_ID,
+  config.GITHUB_PRIVATE_KEY_PATH,
+  config.GITHUB_APP_SLUG
+);
+const app = createApp({ config, store, events, users, githubApp, billing });
 serve({ fetch: app.fetch, port: config.PORT }, info =>
   console.log(`Freebug backend: http://localhost:${info.port}`)
 );

@@ -4,12 +4,19 @@ export interface RunStore {
   create(run: Run): Promise<void>
   get(id: string): Promise<Run | undefined>
   update(id: string, patch: Partial<Run>): Promise<Run>
+  listByEmail(email: string): Promise<Run[]>
 }
 
 export class MemoryRunStore implements RunStore {
   private readonly runs = new Map<string, Run>()
   async create(run: Run) { this.runs.set(run.id, structuredClone(run)) }
   async get(id: string) { const run = this.runs.get(id); return run ? structuredClone(run) : undefined }
+  async listByEmail(email: string) {
+    return [...this.runs.values()]
+      .filter(run => run.email === email)
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+      .map(run => structuredClone(run))
+  }
   async update(id: string, patch: Partial<Run>) {
     const current = this.runs.get(id)
     if (!current) throw new Error(`Run ${id} not found`)

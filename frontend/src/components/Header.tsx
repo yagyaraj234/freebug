@@ -9,7 +9,7 @@ export default function Header() {
           to="/"
           className="text-[#131B4D] no-underline"
           aria-label="Runza home">
-          <RunzaLogo className="h-8 w-auto" />
+          <RunzaLogo className="h-6 w-auto" />
         </Link>
 
         <div className="hidden items-center gap-7 text-sm sm:flex">

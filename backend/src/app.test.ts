@@ -4,13 +4,14 @@ import { createApp } from './app.js'
 import { loadConfig } from './config.js'
 import { InMemoryEventBus } from './events.js'
 import { MemoryRunStore } from './store.js'
-import { MemoryWaitlistStore } from './waitlist.js'
+import { MemoryUserStore } from './users.js'
 
 const config = loadConfig({ GITHUB_WEBHOOK_SECRET: 'test-secret', GITHUB_TARGET_URL: 'https://preview.example.com', PUBLIC_BASE_URL: 'http://localhost:3001', ARTIFACT_DIR: '/tmp' })
 const setup = () => {
   const store = new MemoryRunStore(); const events = new InMemoryEventBus()
-  return { app: createApp({ config, store, events, waitlist: new MemoryWaitlistStore() }), store, events }
+  return { app: createApp({ config, store, events, users: new MemoryUserStore() }), store, events }
 }
+const json = (body: unknown) => ({ method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) })
 
 describe('Freebug API', () => {
   it('reports health', async () => {
