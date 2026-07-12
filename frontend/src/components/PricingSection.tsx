@@ -1,10 +1,12 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { CircleCheck, Zap } from 'lucide-react';
 import { createCheckout, fetchPlans, type PublicPlan } from '../lib/billing';
+import { me } from '../lib/auth';
 
 export function PricingSection() {
   const [plans, setPlans] = useState<PublicPlan[]>([]);
   const [email, setEmail] = useState('');
+  const [signedIn, setSignedIn] = useState(false);
   const [message, setMessage] = useState('Loading plans…');
   const [busy, setBusy] = useState(false);
 
@@ -15,6 +17,12 @@ export function PricingSection() {
         setMessage(p.length ? '' : 'Billing is unavailable.');
       })
       .catch(e => setMessage(e.message));
+    me().then(user => {
+      if (user) {
+        setEmail(user.email);
+        setSignedIn(true);
+      }
+    });
   }, []);
 
   async function buy(e: FormEvent, slug: PublicPlan['slug']) {
@@ -69,18 +77,26 @@ export function PricingSection() {
               </ul>
 
               <form onSubmit={e => buy(e, p.slug)} className="mt-6">
-                <label htmlFor={`email-${p.slug}`} className="fb-mono block text-[11px] tracking-[1px] text-[#8A92C0] uppercase">
-                  Work email
-                </label>
-                <input
-                  id={`email-${p.slug}`}
-                  type="email"
-                  required
-                  autoComplete="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  className="mt-2 w-full rounded-xl border border-[#DEE5FD] bg-white p-3 text-sm text-[#131B4D] outline-none focus:border-[#2B4BF2]"
-                />
+                {signedIn ? (
+                  <p className="fb-mono text-[11px] tracking-[1px] text-[#8A92C0] uppercase">
+                    Buying as {email}
+                  </p>
+                ) : (
+                  <>
+                    <label htmlFor={`email-${p.slug}`} className="fb-mono block text-[11px] tracking-[1px] text-[#8A92C0] uppercase">
+                      Work email
+                    </label>
+                    <input
+                      id={`email-${p.slug}`}
+                      type="email"
+                      required
+                      autoComplete="email"
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                      className="mt-2 w-full rounded-xl border border-[#DEE5FD] bg-white p-3 text-sm text-[#131B4D] outline-none focus:border-[#2B4BF2]"
+                    />
+                  </>
+                )}
                 <button
                   disabled={busy}
                   className="fb-cta-glow fb-press mt-4 inline-flex w-full items-center justify-center gap-2 rounded-[28px] bg-[#2B4BF2] px-8 py-3.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:brightness-95 disabled:opacity-60">
