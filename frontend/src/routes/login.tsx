@@ -1,7 +1,7 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
-import AuthCard from '../components/auth/AuthCard'
+import { createFileRoute, Link } from '@tanstack/react-router';
+import AuthCard from '../components/auth/AuthCard';
 
-export const Route = createFileRoute('/login')({ component: LoginPage })
+export const Route = createFileRoute('/login')({ component: LoginPage });
 
 function LoginPage() {
   return (
@@ -11,15 +11,18 @@ function LoginPage() {
       footer={
         <>
           Don&apos;t have an account?{' '}
-          <Link to="/signup" className="font-semibold text-[#2B4BF2] no-underline">
+          <Link
+            to="/signup"
+            className="font-semibold text-[#2B4BF2] no-underline">
             Sign up
           </Link>
         </>
-      }
-    >
-      <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+      }>
+      <form className="space-y-4" onSubmit={e => e.preventDefault()}>
         <div>
-          <label htmlFor="email" className="mb-1.5 block text-xs font-medium text-[#3D4577]">
+          <label
+            htmlFor="email"
+            className="mb-1.5 block text-xs font-medium text-[#3D4577]">
             Email
           </label>
           <input
@@ -31,7 +34,9 @@ function LoginPage() {
           />
         </div>
         <div>
-          <label htmlFor="password" className="mb-1.5 block text-xs font-medium text-[#3D4577]">
+          <label
+            htmlFor="password"
+            className="mb-1.5 block text-xs font-medium text-[#3D4577]">
             Password
           </label>
           <input
@@ -44,8 +49,7 @@ function LoginPage() {
         </div>
         <button
           type="submit"
-          className="fb-cta-glow mt-2 w-full rounded-full bg-[#2B4BF2] py-3 text-sm font-semibold text-[#FFFFFF] hover:brightness-95"
-        >
+          className="fb-cta-glow mt-2 w-full rounded-full bg-[#2B4BF2] py-3 text-sm font-semibold text-[#FFFFFF] transition hover:brightness-95">
           Log in
         </button>
       </form>
@@ -58,10 +62,9 @@ function LoginPage() {
 
       <button
         type="button"
-        className="w-full rounded-full border border-black/10 bg-white py-3 text-sm font-medium text-[#131B4D] hover:bg-black/5"
-      >
+        className="w-full rounded-full border border-black/10 bg-white py-3 text-sm font-medium text-[#131B4D] transition hover:bg-black/5">
         Continue with Google
       </button>
     </AuthCard>
-  )
+  );
 }

@@ -25,7 +25,7 @@ export default function AuthCard({
       <Link
         to="/"
         aria-label="Back home"
-        className="fb-press absolute left-4 top-6 z-10 flex h-9 w-9 items-center justify-center rounded-full text-[#3D4577] no-underline hover:bg-black/5 sm:left-8"
+        className="fb-press absolute left-4 top-6 z-10 flex h-9 w-9 items-center justify-center rounded-full text-[#3D4577] no-underline transition hover:bg-black/5 sm:left-8"
       >
         <ArrowLeft size={18} />
       </Link>

@@ -13,7 +13,7 @@ import {
   Play,
   Accessibility,
   BadgeCheck,
-} from 'lucide-react'
+} from 'lucide-react';
 
 const FLOW_CHIPS = [
   { label: 'Checkout', bg: '#DBE4FE', color: '#2B4BF2', tilt: '-3deg' },
@@ -22,7 +22,7 @@ const FLOW_CHIPS = [
   { label: 'Settings', bg: '#DCF3E4', color: '#2F8F5B', tilt: '3deg' },
   { label: 'Billing', bg: '#DEE5FD', color: '#2B4BF2', tilt: '-2deg' },
   { label: 'Onboarding', bg: '#FBDCE7', color: '#C23B7C', tilt: '2deg' },
-]
+];
 
 const COMPANIES = [
   'NORTHBEAM',
@@ -31,13 +31,14 @@ const COMPANIES = [
   'GRIDLOCK',
   'PARALLEL',
   'COREBASE',
-]
+];
 
 const STEPS = [
   {
     number: '01',
     title: 'Open a PR',
-    description: 'Runza watches your repo and picks up every diff the moment it lands.',
+    description:
+      'Runza watches your repo and picks up every diff the moment it lands.',
     icon: GitPullRequest,
     accent: '#2B4BF2',
     bg: '#DEE5FD',
@@ -45,7 +46,8 @@ const STEPS = [
   {
     number: '02',
     title: 'Generate tests',
-    description: 'Playwright specs get written for the exact lines that changed, no boilerplate.',
+    description:
+      'Playwright specs get written for the exact lines that changed, no boilerplate.',
     icon: Wand2,
     accent: '#C9701F',
     bg: '#FBE7C9',
@@ -53,7 +55,8 @@ const STEPS = [
   {
     number: '03',
     title: 'Run & record',
-    description: 'Every spec runs in CI with full video capture, uploaded behind a CDN.',
+    description:
+      'Every spec runs in CI with full video capture, uploaded behind a CDN.',
     icon: Video,
     accent: '#2B4BF2',
     bg: '#DBE4FE',
@@ -61,12 +64,13 @@ const STEPS = [
   {
     number: '04',
     title: 'Ship or fix',
-    description: 'Pass, and merge. Fail, and get one link straight to the broken frame.',
+    description:
+      'Pass, and merge. Fail, and get one link straight to the broken frame.',
     icon: Link2,
     accent: '#C23B4B',
     bg: '#F9DCDE',
   },
-]
+];
 
 const REVIEWS = [
   {
@@ -78,7 +82,7 @@ const REVIEWS = [
   },
   {
     quote:
-      "We stopped assigning someone to write PR tests. It just happens now, before review even starts.",
+      'We stopped assigning someone to write PR tests. It just happens now, before review even starts.',
     name: 'Marcus T.',
     role: 'Eng Lead',
     bg: '#FBE7C9',
@@ -90,14 +94,14 @@ const REVIEWS = [
     role: 'QA Lead',
     bg: '#DBE4FE',
   },
-]
+];
 
 const TESTIMONIAL_CHIPS = [
   { name: 'Ava R.', role: 'Staff Engineer', chipBg: '#DEE5FD', initials: 'AR' },
   { name: 'Marcus T.', role: 'Eng Lead', chipBg: '#FBDCE7', initials: 'MT' },
   { name: 'Priya K.', role: 'QA Lead', chipBg: '#FBE7C9', initials: 'PK' },
   { name: 'Sam D.', role: 'Founder', chipBg: '#DBE4FE', initials: 'SD' },
-]
+];
 
 const TEST_GEN_FEATURES = [
   {
@@ -118,7 +122,7 @@ const TEST_GEN_FEATURES = [
     icon: Clapperboard,
     text: 'Turn a failed run into a shareable video link',
   },
-]
+];
 
 const VIDEO_FEATURES = [
   {
@@ -139,7 +143,7 @@ const VIDEO_FEATURES = [
     icon: Link2,
     text: 'One shareable link per run, behind a CDN',
   },
-]
+];
 
 export function Hero() {
   return (
@@ -162,8 +166,7 @@ export function Hero() {
 
         <a
           href="/waitlist"
-          className="fb-cta-glow fb-press mt-8 inline-flex items-center gap-2 rounded-[28px] bg-[#2B4BF2] px-8 py-3.5 text-sm font-semibold text-[#FFFFFF] no-underline hover:-translate-y-0.5 hover:brightness-95"
-        >
+          className="fb-cta-glow fb-press mt-8 inline-flex items-center gap-2 rounded-[28px] bg-[#2B4BF2] px-8 py-3.5 text-sm font-semibold text-[#FFFFFF] no-underline transition hover:-translate-y-0.5 hover:brightness-95">
           Request Access
           <Zap size={15} fill="#FFFFFF" />
         </a>
@@ -173,21 +176,23 @@ export function Hero() {
         </p>
       </div>
     </section>
-  )
+  );
 }
 
 export function BentoGrid() {
   return (
-    <section id="features" className="relative px-4 pb-24 pt-4 sm:px-8 sm:pb-32">
+    <section
+      id="features"
+      className="relative px-4 pb-24 pt-4 sm:px-8 sm:pb-32">
       <div className="mx-auto max-w-6xl">
         <div className="grid gap-5 lg:grid-cols-3">
           {/* Row 1 — big PR card + classification card */}
           <div
             className="fb-bento-card overflow-hidden p-8 pb-0 text-center lg:col-span-2"
             style={{
-              background: 'linear-gradient(180deg, #5D7DF9 0%, #A9BEFB 70%, #D4DFFD 100%)',
-            }}
-          >
+              background:
+                'linear-gradient(180deg, #5D7DF9 0%, #A9BEFB 70%, #D4DFFD 100%)',
+            }}>
             <h3 className="fb-serif m-0 text-2xl text-white">
               Tests from every pull request
             </h3>
@@ -210,8 +215,7 @@ export function BentoGrid() {
                 ].map(([name, pass]) => (
                   <div
                     key={name as string}
-                    className="flex items-center justify-between rounded-lg bg-[#EEF2FE] px-3 py-2"
-                  >
+                    className="flex items-center justify-between rounded-lg bg-[#EEF2FE] px-3 py-2">
                     <span className="fb-mono text-[12px] text-[#3D4577]">
                       {name}
                     </span>
@@ -328,10 +332,9 @@ export function BentoGrid() {
             className="fb-bento-card relative overflow-hidden px-8 py-14 text-center lg:col-span-3"
             style={{
               background: 'linear-gradient(180deg, #DEE5FD 0%, #C7D6FD 100%)',
-            }}
-          >
+            }}>
             <div className="pointer-events-none absolute inset-0 flex flex-wrap items-center justify-between px-6 opacity-90 sm:px-12">
-              {FLOW_CHIPS.map((chip) => (
+              {FLOW_CHIPS.map(chip => (
                 <span
                   key={chip.label}
                   className="rounded-full px-4 py-2 text-xs font-semibold shadow-[0_6px_16px_rgba(19,27,77,0.1)]"
@@ -339,8 +342,7 @@ export function BentoGrid() {
                     background: chip.bg,
                     color: chip.color,
                     transform: `rotate(${chip.tilt})`,
-                  }}
-                >
+                  }}>
                   {chip.label}
                 </span>
               ))}
@@ -352,15 +354,15 @@ export function BentoGrid() {
                 <em>covering every flow</em>
               </h3>
               <p className="m-0 mt-2 text-[13px] text-[#545C8C]">
-                Point Runza at a URL and it maps pages, forms, and states
-                into a full user-flow diagram.
+                Point Runza at a URL and it maps pages, forms, and states into a
+                full user-flow diagram.
               </p>
             </div>
           </div>
         </div>
       </div>
     </section>
-  )
+  );
 }
 
 export function CompaniesStrip() {
@@ -371,23 +373,21 @@ export function CompaniesStrip() {
           Trusted by teams shipping fast
         </h2>
         <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
-          {COMPANIES.map((name) => (
+          {COMPANIES.map(name => (
             <span
               key={name}
-              className="fb-mono text-sm tracking-wider text-black/30"
-            >
+              className="fb-mono text-sm tracking-wider text-black/30">
               {name}
             </span>
           ))}
         </div>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-          {TESTIMONIAL_CHIPS.map((person) => (
+          {TESTIMONIAL_CHIPS.map(person => (
             <div
               key={person.name}
               className="flex items-center gap-3 rounded-lg px-3 py-2"
-              style={{ background: person.chipBg }}
-            >
+              style={{ background: person.chipBg }}>
               <div className="fb-mono flex h-8 w-8 items-center justify-center rounded-md bg-white/60 text-[11px] font-medium text-[#131B4D]">
                 {person.initials}
               </div>
@@ -402,7 +402,7 @@ export function CompaniesStrip() {
         </div>
       </div>
     </section>
-  )
+  );
 }
 
 export function HowItWorks() {
@@ -419,18 +419,14 @@ export function HowItWorks() {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {STEPS.map((step) => {
-            const Icon = step.icon
+          {STEPS.map(step => {
+            const Icon = step.icon;
             return (
-              <div
-                key={step.number}
-                className="rounded-2xl bg-[#EEF2FE] p-5"
-              >
+              <div key={step.number} className="rounded-2xl bg-[#EEF2FE] p-5">
                 <div className="mb-6 flex items-center justify-between">
                   <span
                     className="flex h-9 w-9 items-center justify-center rounded-lg"
-                    style={{ background: step.bg }}
-                  >
+                    style={{ background: step.bg }}>
                     <Icon size={17} color={step.accent} />
                   </span>
                   <span className="fb-mono text-xs text-[#8A92C0]">
@@ -444,12 +440,12 @@ export function HowItWorks() {
                   {step.description}
                 </p>
               </div>
-            )
+            );
           })}
         </div>
       </div>
     </section>
-  )
+  );
 }
 
 export function Reviews() {
@@ -466,12 +462,11 @@ export function Reviews() {
         </div>
 
         <div className="grid gap-5 sm:grid-cols-3">
-          {REVIEWS.map((review) => (
+          {REVIEWS.map(review => (
             <div
               key={review.name}
               className="rounded-2xl p-6 shadow-[0_8px_24px_rgba(60,45,20,0.07)]"
-              style={{ background: review.bg }}
-            >
+              style={{ background: review.bg }}>
               <p className="fb-serif m-0 mb-6 text-[1.05rem] leading-snug text-[#131B4D]">
                 &ldquo;{review.quote}&rdquo;
               </p>
@@ -482,10 +477,9 @@ export function Reviews() {
             </div>
           ))}
         </div>
-
       </div>
     </section>
-  )
+  );
 }
 
 export function TestGenerationSection() {
@@ -500,22 +494,20 @@ export function TestGenerationSection() {
             Tests that actually cover your PR.
           </h2>
           <ul className="m-0 list-none space-y-3 p-0">
-            {TEST_GEN_FEATURES.map((item) => {
-              const Icon = item.icon
+            {TEST_GEN_FEATURES.map(item => {
+              const Icon = item.icon;
               return (
                 <li
                   key={item.text}
-                  className="flex items-center gap-3 rounded-xl bg-white px-4 py-3"
-                >
+                  className="flex items-center gap-3 rounded-xl bg-white px-4 py-3">
                   <span
                     className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg"
-                    style={{ background: item.iconBg }}
-                  >
+                    style={{ background: item.iconBg }}>
                     <Icon size={16} color={item.iconColor} />
                   </span>
                   <span className="text-sm text-[#3D4577]">{item.text}</span>
                 </li>
-              )
+              );
             })}
           </ul>
         </div>
@@ -523,7 +515,7 @@ export function TestGenerationSection() {
         <TerminalIllustration />
       </div>
     </section>
-  )
+  );
 }
 
 export function VideoEvidenceSection() {
@@ -541,28 +533,26 @@ export function VideoEvidenceSection() {
             Every run, replayable.
           </h2>
           <ul className="m-0 list-none space-y-3 p-0">
-            {VIDEO_FEATURES.map((item) => {
-              const Icon = item.icon
+            {VIDEO_FEATURES.map(item => {
+              const Icon = item.icon;
               return (
                 <li
                   key={item.text}
-                  className="flex items-center gap-3 rounded-xl bg-white px-4 py-3"
-                >
+                  className="flex items-center gap-3 rounded-xl bg-white px-4 py-3">
                   <span
                     className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg"
-                    style={{ background: item.iconBg }}
-                  >
+                    style={{ background: item.iconBg }}>
                     <Icon size={16} color={item.iconColor} />
                   </span>
                   <span className="text-sm text-[#3D4577]">{item.text}</span>
                 </li>
-              )
+              );
             })}
           </ul>
         </div>
       </div>
     </section>
-  )
+  );
 }
 
 export function FinalCta() {
@@ -577,14 +567,13 @@ export function FinalCta() {
         </p>
         <a
           href="/waitlist"
-          className="fb-cta-glow fb-press inline-flex items-center gap-2 rounded-[28px] bg-[#2B4BF2] px-8 py-3.5 text-sm font-semibold text-[#FFFFFF] no-underline hover:-translate-y-0.5 hover:brightness-95"
-        >
+          className="fb-cta-glow fb-press inline-flex items-center gap-2 rounded-[28px] bg-[#2B4BF2] px-8 py-3.5 text-sm font-semibold text-[#FFFFFF] no-underline transition hover:-translate-y-0.5 hover:brightness-95">
           Request Access
           <Zap size={15} fill="#FFFFFF" />
         </a>
       </div>
     </section>
-  )
+  );
 }
 
 function TerminalIllustration() {
@@ -593,8 +582,7 @@ function TerminalIllustration() {
       className="overflow-hidden rounded-2xl p-4 shadow-[0_12px_32px_rgba(60,45,20,0.08)]"
       style={{
         background: 'linear-gradient(160deg, #FBE7C9 0%, #8FA8F6 100%)',
-      }}
-    >
+      }}>
       <div className="overflow-hidden rounded-xl bg-[#FFFFFF] shadow-inner">
         <div className="flex items-center gap-1.5 border-b border-black/5 px-4 py-3">
           <span className="h-2.5 w-2.5 rounded-full bg-[#FF6B6B]" />
@@ -630,7 +618,7 @@ function TerminalIllustration() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function VideoIllustration() {
@@ -639,8 +627,7 @@ function VideoIllustration() {
       className="overflow-hidden rounded-2xl p-4 shadow-[0_12px_32px_rgba(60,45,20,0.08)]"
       style={{
         background: 'linear-gradient(160deg, #DBE4FE 0%, #A9C7F3 100%)',
-      }}
-    >
+      }}>
       <div className="overflow-hidden rounded-xl bg-[#0F1B2E]">
         <div className="flex aspect-video items-center justify-center">
           <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/95 shadow-lg">
@@ -655,5 +642,5 @@ function VideoIllustration() {
         </div>
       </div>
     </div>
-  )
+  );
 }

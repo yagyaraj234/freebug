@@ -24,9 +24,9 @@ export class DaytonaExecutor implements Executor {
     await writeFile(localScript, script)
     const artifacts: Artifact[] = [await this.store.saveFile(run.id, 'script', localScript)]
     const daytona = new Daytona({ apiKey: this.config.DAYTONA_API_KEY, apiUrl: this.config.DAYTONA_API_URL, target: this.config.DAYTONA_TARGET })
-    const sandbox = await daytona.create(this.config.DAYTONA_SNAPSHOT
-      ? { snapshot: this.config.DAYTONA_SNAPSHOT, ephemeral: true, labels: { freebugRun: run.id } }
-      : { image: 'mcr.microsoft.com/playwright:v1.61.1-noble', ephemeral: true, labels: { freebugRun: run.id } }, { timeout: 300, onSnapshotCreateLogs: () => undefined })
+    const sandbox = this.config.DAYTONA_SNAPSHOT
+      ? await daytona.create({ snapshot: this.config.DAYTONA_SNAPSHOT, ephemeral: true, labels: { freebugRun: run.id } }, { timeout: 300 })
+      : await daytona.create({ image: 'mcr.microsoft.com/playwright:v1.61.1-noble', ephemeral: true, labels: { freebugRun: run.id } }, { timeout: 300, onSnapshotCreateLogs: () => undefined })
     try {
       await sandbox.fs.createFolder('workspace/freebug', '755')
       await sandbox.fs.uploadFiles([
