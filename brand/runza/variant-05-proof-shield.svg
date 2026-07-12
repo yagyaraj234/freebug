@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-labelledby="title desc">
+  <title id="title">Runza Proof Shield logo concept</title>
+  <desc id="desc">A protective shield contains a fast, evidence-backed test check.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M50 13 82 25v24c0 20-12 31-32 39-20-8-32-19-32-39V25Z" stroke-width="8"/>
+    <path d="m32 52 12 11 24-27" stroke-width="9"/>
+    <path d="M63 28h13" stroke-width="6"/>
+  </g>
+</svg>

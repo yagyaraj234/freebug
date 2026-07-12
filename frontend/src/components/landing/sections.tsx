@@ -162,7 +162,7 @@ export function Hero() {
 
         <a
           href="/waitlist"
-          className="fb-cta-glow fb-press mt-8 inline-flex items-center gap-2 rounded-[28px] bg-[#2B4BF2] px-8 py-3.5 text-sm font-semibold text-[#FFFFFF] no-underline transition hover:-translate-y-0.5 hover:brightness-95"
+          className="fb-cta-glow fb-press mt-8 inline-flex items-center gap-2 rounded-[28px] bg-[#2B4BF2] px-8 py-3.5 text-sm font-semibold text-[#FFFFFF] no-underline hover:-translate-y-0.5 hover:brightness-95"
         >
           Request Access
           <Zap size={15} fill="#FFFFFF" />
@@ -577,7 +577,7 @@ export function FinalCta() {
         </p>
         <a
           href="/waitlist"
-          className="fb-cta-glow fb-press inline-flex items-center gap-2 rounded-[28px] bg-[#2B4BF2] px-8 py-3.5 text-sm font-semibold text-[#FFFFFF] no-underline transition hover:-translate-y-0.5 hover:brightness-95"
+          className="fb-cta-glow fb-press inline-flex items-center gap-2 rounded-[28px] bg-[#2B4BF2] px-8 py-3.5 text-sm font-semibold text-[#FFFFFF] no-underline hover:-translate-y-0.5 hover:brightness-95"
         >
           Request Access
           <Zap size={15} fill="#FFFFFF" />

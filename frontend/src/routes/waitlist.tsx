@@ -47,7 +47,7 @@ function WaitlistPage() {
         >
           <div
             role="img"
-            aria-label="Bugfree product preview"
+            aria-label="Runza product preview"
             className="absolute inset-6 z-10 rounded-2xl bg-contain bg-center bg-no-repeat"
             style={{ backgroundImage: 'url(/waitlist-visual.png)' }}
           />
@@ -67,14 +67,14 @@ function WaitlistPage() {
             <em>Ship tests, not bugs.</em>
           </h1>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-[#545C8C]">
-            Bugfree generates Playwright tests for every PR, runs them with
+            Runza generates Playwright tests for every PR, runs them with
             video evidence, and links each failure to the diff that broke it.
             Join the waitlist and we&apos;ll email you when your spot opens.
           </p>
 
           {done ? (
             <div
-              className="mt-8 flex items-start gap-3 rounded-2xl bg-white p-5 shadow-[0_12px_28px_rgba(19,27,77,0.1)]"
+              className="fb-pop-in mt-8 flex items-start gap-3 rounded-2xl bg-white p-5 shadow-[0_12px_28px_rgba(19,27,77,0.1)]"
               role="status"
             >
               <CircleCheck size={20} color="#2F8F5B" className="mt-0.5 shrink-0" />
@@ -118,7 +118,7 @@ function WaitlistPage() {
                 <button
                   type="submit"
                   disabled={status === 'loading'}
-                  className="fb-cta-glow fb-press inline-flex items-center justify-center gap-2 rounded-[28px] bg-[#2B4BF2] px-7 py-3 text-sm font-semibold text-white transition hover:brightness-95 disabled:opacity-70"
+                  className="fb-cta-glow fb-press inline-flex items-center justify-center gap-2 rounded-[28px] bg-[#2B4BF2] px-7 py-3 text-sm font-semibold text-white hover:brightness-95 disabled:opacity-70"
                 >
                   {status === 'loading' ? 'Joining…' : 'Join waitlist'}
                   <Zap size={14} fill="#FFFFFF" />

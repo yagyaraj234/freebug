@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-labelledby="title desc">
+  <title id="title">Runza Test Lanes logo concept</title>
+  <desc id="desc">Three test paths converge into one verified result.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="8">
+    <path d="M16 25h23c13 0 16 25 30 25h15"/>
+    <path d="M16 50h68"/>
+    <path d="M16 75h23c13 0 16-25 30-25"/>
+    <path d="m75 39 11 11-11 11"/>
+  </g>
+</svg>

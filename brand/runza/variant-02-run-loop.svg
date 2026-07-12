@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-labelledby="title desc">
+  <title id="title">Runza Run Loop logo concept</title>
+  <desc id="desc">A continuous execution loop surrounding a test pass check.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M78 27A35 35 0 1 0 83 62" stroke-width="9"/>
+    <path d="m70 25 11 1-2-11" stroke-width="9"/>
+    <path d="m34 51 11 11 22-25" stroke-width="9"/>
+  </g>
+</svg>

@@ -5,26 +5,11 @@ type RunzaLogoProps = {
 export default function RunzaLogo({ className }: RunzaLogoProps) {
   return (
     <svg
-      viewBox="0 0 400 120"
+      viewBox="115 25 260 70"
       className={className}
       aria-hidden="true"
       focusable="false"
     >
-      <g transform="translate(7 11) scale(.98)">
-        <g
-          fill="none"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path
-            d="M25 82V18h27c17 0 27 9 27 23S69 64 52 64H25"
-            strokeWidth="10"
-          />
-          <path d="M52 64 79 86" strokeWidth="10" />
-        </g>
-        <path d="m49 32 16 10-16 10Z" fill="#8FA8F6" />
-      </g>
       <g
         fill="none"
         stroke="currentColor"

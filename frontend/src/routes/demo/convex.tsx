@@ -109,13 +109,10 @@ function ConvexTodos() {
                   className={`p-4 flex items-center gap-4 transition-colors hover:bg-[var(--link-bg-hover)] ${
                     todo.completed ? 'opacity-75' : ''
                   }`}
-                  style={{
-                    animationDelay: `${index * 50}ms`,
-                  }}
                 >
                   <button
                     onClick={() => handleToggleTodo(todo._id)}
-                    className={`flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
+                    className={`flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors duration-200 ${
                       todo.completed
                         ? 'border-[var(--lagoon-deep)] bg-[var(--lagoon)] text-[var(--sea-ink)]'
                         : 'border-[var(--line)] text-transparent hover:border-[var(--lagoon-deep)] hover:text-[var(--lagoon-deep)]'
@@ -125,7 +122,7 @@ function ConvexTodos() {
                   </button>
 
                   <span
-                    className={`flex-1 text-lg transition-all duration-200 ${
+                    className={`flex-1 text-lg transition-colors duration-200 ${
                       todo.completed
                         ? 'line-through demo-muted'
                         : 'text-[var(--sea-ink)]'

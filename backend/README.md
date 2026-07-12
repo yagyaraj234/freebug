@@ -22,10 +22,19 @@ The API listens on `http://localhost:3001` by default.
 - `OPENAI_BASE_URL`: any OpenAI-compatible `/v1` URL.
 - `OPENAI_API_KEY`: provider credential.
 - `OPENAI_MODEL`: model identifier accepted by that endpoint.
+- `GITHUB_APP_ID`: numeric RunzaAI GitHub App identifier.
+- `GITHUB_APP_SLUG`: GitHub App slug (`runzaai`).
+- `GITHUB_INSTALLATION_ID`: installation identifier for the connected account/repository.
+- `GITHUB_PRIVATE_KEY_PATH`: path to the downloaded GitHub App private key. Keep it outside version control.
 - `GITHUB_WEBHOOK_SECRET`: GitHub App webhook secret.
+- `GITHUB_WEBHOOK_PROXY_URL`: Smee HTTPS channel used to relay GitHub webhooks during local development.
 - `GITHUB_TARGET_URL`: default preview/staging URL for PR runs. CI can override this with the `x-freebug-target-url` webhook header.
 - `CONVEX_URL`: Convex deployment URL used to persist waitlist signups.
 - `ARTIFACT_DIR`: local artifact directory. Use an object-storage adapter for multi-node production.
+- `PLANNER_AGENTS`: comma-separated planning roles run concurrently for every run.
+- `DAYTONA_API_KEY`: required for PR runs; each PR run gets one ephemeral sandbox.
+- `DAYTONA_API_URL`, `DAYTONA_TARGET`, `DAYTONA_SNAPSHOT`: optional Daytona overrides.
+- `GCS_BUCKET`, `GCS_PREFIX`, `GCS_PUBLIC_BASE_URL`: optional GCS artifact storage. Authentication uses Google Application Default Credentials.
 - `SMTP_URL`: Nodemailer-compatible SMTP URL. If omitted, completion is logged.
 - `SMTP_FROM`: sender used for completion email.
 
@@ -63,7 +72,16 @@ Endpoints:
 
 ## GitHub integration
 
-Create a GitHub App with Pull requests read access, Checks write access for the next production phase, and Pull request webhooks. Configure the webhook URL as `/v1/github/webhook`. Events `opened`, `reopened`, and `synchronize` create PR runs after HMAC verification.
+The RunzaAI GitHub App uses repository permissions for Contents (read), Pull requests (read), Checks (read/write), and Deployments (read). It subscribes to Pull request, Deployment, and Deployment status events; GitHub sends installation lifecycle events automatically. The current MVP handles Pull request actions `opened`, `reopened`, and `synchronize`; other subscriptions support the Phase 3 workflow described in `feature.md`.
+
+For local development, set the App webhook URL to `GITHUB_WEBHOOK_PROXY_URL`, then run both processes:
+
+```bash
+npm run dev
+npm run dev:github
+```
+
+The relay forwards signed deliveries to `http://127.0.0.1:${PORT}/v1/github/webhook`. Smee is a third-party relay and receives the GitHub webhook payloads sent to its channel; only activate it for repositories whose owners approve that transfer. Production must replace Smee with a stable HTTPS `PUBLIC_BASE_URL` and configure the App webhook as `${PUBLIC_BASE_URL}/v1/github/webhook`.
 
 A deployment system must provide a reachable preview URL using `GITHUB_TARGET_URL` or `x-freebug-target-url`; a PR payload does not contain the deployed application URL.
 
@@ -80,6 +98,8 @@ npm test
 ```
 
 The end-to-end test starts a real fixture web server, runs Chromium, executes an AI-style plan, performs an Axe scan, records video and trace artifacts, creates the report, updates run state, and invokes the notification adapter.
+
+PR webhooks fan out to the configured planning agents, merge their validated DSL plans, generate a reproducible `generated.spec.mjs`, then create exactly one ephemeral Daytona sandbox for that PR run. The sandbox runs every merged test case and is deleted after evidence is downloaded. Configure `GCS_BUCKET` to upload scripts, videos, traces, screenshots, and reports to Google Cloud Storage.
 
 ## Production boundaries
 

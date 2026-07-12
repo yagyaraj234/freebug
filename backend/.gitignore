@@ -18,6 +18,7 @@ data/
 # env
 .env
 .env.production
+*.private-key.pem
 
 # logs
 logs/

@@ -16,7 +16,7 @@ export const TestPlanSchema = z.object({
 export interface Planner { plan(run: Run): Promise<TestPlan> }
 
 export class OpenAIPlanner implements Planner {
-  constructor(private readonly apiKey: string) {}
+  constructor(private readonly apiKey: string, private readonly role = 'functional') {}
   async plan(run: Run): Promise<TestPlan> {
     const response = await fetch(`${run.model.baseUrl.replace(/\/$/, '')}/chat/completions`, {
       method: 'POST',
@@ -26,7 +26,7 @@ export class OpenAIPlanner implements Planner {
         temperature: 0,
         response_format: { type: 'json_object' },
         messages: [
-          { role: 'system', content: 'Create a safe browser test plan as JSON: {summary,tests:[{id,title,steps}]}. Allowed step actions: goto(path same-origin only), click(role button|link,name), fill(label,value), assertText(text), scanAccessibility. Never emit code or external URLs.' },
+          { role: 'system', content: `Act as ${this.role} testing agent. Create a safe browser test plan as JSON: {summary,tests:[{id,title,steps}]}. Allowed step actions: goto(path same-origin only), click(role button|link,name), fill(label,value), assertText(text), scanAccessibility. Never emit code or external URLs.` },
           { role: 'user', content: `Mode: ${run.mode}. Target: ${run.targetUrl}. Repository: ${run.repository ?? 'not supplied'}. Pull request: ${run.pullRequest ?? 'not supplied'}.` },
         ],
       }),
@@ -37,5 +37,20 @@ export class OpenAIPlanner implements Planner {
     const content = body.choices?.[0]?.message?.content
     if (!content) throw new Error('Model endpoint returned no plan')
     return TestPlanSchema.parse(JSON.parse(content))
+  }
+}
+
+export class MultiAgentPlanner implements Planner {
+  private readonly planners: OpenAIPlanner[]
+  constructor(apiKey: string, roles: string[]) {
+    this.planners = roles.filter(Boolean).map((role) => new OpenAIPlanner(apiKey, role))
+    if (!this.planners.length) throw new Error('PLANNER_AGENTS must contain at least one role')
+  }
+  async plan(run: Run): Promise<TestPlan> {
+    const plans = await Promise.all(this.planners.map((planner) => planner.plan(run)))
+    return TestPlanSchema.parse({
+      summary: plans.map((plan) => plan.summary).join(' | '),
+      tests: plans.flatMap((plan, agent) => plan.tests.map((test) => ({ ...test, id: `a${agent + 1}-${test.id}` }))).slice(0, 25),
+    })
   }
 }

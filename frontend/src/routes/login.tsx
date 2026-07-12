@@ -44,7 +44,7 @@ function LoginPage() {
         </div>
         <button
           type="submit"
-          className="fb-cta-glow mt-2 w-full rounded-full bg-[#2B4BF2] py-3 text-sm font-semibold text-[#FFFFFF] transition hover:brightness-95"
+          className="fb-cta-glow mt-2 w-full rounded-full bg-[#2B4BF2] py-3 text-sm font-semibold text-[#FFFFFF] hover:brightness-95"
         >
           Log in
         </button>
@@ -58,7 +58,7 @@ function LoginPage() {
 
       <button
         type="button"
-        className="w-full rounded-full border border-black/10 bg-white py-3 text-sm font-medium text-[#131B4D] transition hover:bg-black/5"
+        className="w-full rounded-full border border-black/10 bg-white py-3 text-sm font-medium text-[#131B4D] hover:bg-black/5"
       >
         Continue with Google
       </button>

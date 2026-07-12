@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-labelledby="title desc">
+  <title id="title">Runza RZ Velocity logo concept</title>
+  <desc id="desc">An interlocked R and Z monogram built from one fast angular route.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="8">
+    <path d="M18 82V18h27c13 0 21 7 21 18s-8 18-21 18H18"/>
+    <path d="m45 54 17 17"/>
+    <path d="M61 18h24L61 82h24"/>
+  </g>
+</svg>
