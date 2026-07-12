@@ -58,8 +58,10 @@ Freebug is an autonomous web-application testing platform. A team connects a Git
 
 - Product landing page explaining PR testing and full-app discovery.
 - Waitlist form connected to `POST /v1/waitlist`.
+- Pricing catalog for $149 Starter and $499 Scale plans with Dodo hosted checkout.
 - Inline validation, loading, success, duplicate, and error states.
 - Responsive layout and accessible keyboard/focus behavior.
+- Server-driven Starter ($149/month) and Scale ($499/month) pricing with Dodo hosted checkout.
 - Product demo showing a sample run, bug, video, and user-flow diagram.
 - Documentation links, privacy statement, and contact information.
 
@@ -302,6 +304,9 @@ Freebug is an autonomous web-application testing platform. A team connects a Git
 - Optional Slack, Microsoft Teams, and webhook adapters.
 
 ## Persistence and pub/sub
+
+- Dodo subscription webhooks, idempotent monthly credit grants, and run credit reservation/settlement.
+- Follow-up: persist subscriptions, grants, reservations, and webhook event IDs in a transactional production store.
 
 - In-memory adapters for local development and tests.
 - PostgreSQL production store for runs, attempts, bugs, artifacts, installations, and audit events.
