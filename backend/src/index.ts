@@ -1,21 +1,4 @@
-import 'dotenv/config'
-import { serve } from '@hono/node-server'
-import { resolve } from 'node:path'
-import { createApp } from './app.js'
-import { LocalArtifactStore } from './artifacts.js'
-import { loadConfig } from './config.js'
-import { InMemoryEventBus } from './events.js'
-import { ConsoleNotifier, SmtpNotifier } from './notifier.js'
-import { RunPipeline } from './pipeline.js'
-import { OpenAIPlanner } from './planner.js'
-import { PlaywrightExecutor } from './runner.js'
-import { MemoryRunStore } from './store.js'
-import { ConvexWaitlistStore, MemoryWaitlistStore } from './waitlist.js'
-
-const config = loadConfig(), store = new MemoryRunStore(), events = new InMemoryEventBus()
-const artifacts = new LocalArtifactStore(resolve(config.ARTIFACT_DIR), config.PUBLIC_BASE_URL)
-const notifier = config.SMTP_URL ? new SmtpNotifier(config.SMTP_URL, config.SMTP_FROM) : new ConsoleNotifier()
-new RunPipeline({ store, events, planner: new OpenAIPlanner(config.OPENAI_API_KEY), executor: new PlaywrightExecutor(artifacts), artifacts, notifier, publicBaseUrl: config.PUBLIC_BASE_URL }).start()
-const waitlist = config.CONVEX_URL ? new ConvexWaitlistStore(config.CONVEX_URL) : new MemoryWaitlistStore()
-const app = createApp({ config, store, events, waitlist })
-serve({ fetch: app.fetch, port: config.PORT }, (info) => console.log(`Freebug backend: http://localhost:${info.port}`))
+import 'dotenv/config'; import { serve } from '@hono/node-server'; import { resolve } from 'node:path'; import { createApp } from './app.js'; import { LocalArtifactStore } from './artifacts.js'; import { createCatalog } from './billing/catalog.js'; import { DodoBillingProvider } from './billing/dodo.js'; import { MemoryBillingStore } from './billing/store.js'; import { loadConfig } from './config.js'; import { InMemoryEventBus } from './events.js'; import { ConsoleNotifier,SmtpNotifier } from './notifier.js'; import { RunPipeline } from './pipeline.js'; import { OpenAIPlanner } from './planner.js'; import { PlaywrightExecutor } from './runner.js'; import { MemoryRunStore } from './store.js'; import { ConvexWaitlistStore,MemoryWaitlistStore } from './waitlist.js'
+const config=loadConfig(),store=new MemoryRunStore(),events=new InMemoryEventBus(),artifacts=new LocalArtifactStore(resolve(config.ARTIFACT_DIR),config.PUBLIC_BASE_URL),billingStore=config.BILLING_ENABLED?new MemoryBillingStore():undefined
+const billing=config.BILLING_ENABLED?{store:billingStore!,provider:new DodoBillingProvider({apiKey:config.DODO_API_KEY,webhookKey:config.DODO_WEBHOOK_KEY,environment:config.DODO_ENVIRONMENT,returnUrl:config.DODO_RETURN_URL!}),catalog:createCatalog({starterProductId:config.DODO_STARTER_PRODUCT_ID,scaleProductId:config.DODO_SCALE_PRODUCT_ID,starterCredits:config.DODO_STARTER_CREDITS!,scaleCredits:config.DODO_SCALE_CREDITS!})}:undefined
+const notifier=config.SMTP_URL?new SmtpNotifier(config.SMTP_URL,config.SMTP_FROM):new ConsoleNotifier();new RunPipeline({store,events,planner:new OpenAIPlanner(config.OPENAI_API_KEY),executor:new PlaywrightExecutor(artifacts),artifacts,notifier,publicBaseUrl:config.PUBLIC_BASE_URL,billing:billingStore}).start();const waitlist=config.CONVEX_URL?new ConvexWaitlistStore(config.CONVEX_URL):new MemoryWaitlistStore();const app=createApp({config,store,events,waitlist,billing});serve({fetch:app.fetch,port:config.PORT},info=>console.log(`Freebug backend: http://localhost:${info.port}`))

@@ -22,6 +22,8 @@ export interface Run {
   repository?: string
   pullRequest?: number
   email?: string
+  billingReservationId?: string
+  billingAccountKey?: string
   model: { baseUrl: string; model: string }
   plan?: TestPlan
   results?: TestResult[]
