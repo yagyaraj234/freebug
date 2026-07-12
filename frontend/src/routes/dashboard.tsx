@@ -1,6 +1,16 @@
 import { useEffect, useState } from 'react';
-import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { CircleCheck, ExternalLink, Github, Lock } from 'lucide-react';
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
+import {
+  Check,
+  CircleCheck,
+  Copy,
+  ExternalLink,
+  Github,
+  GitPullRequest,
+  Lock,
+  LogOut,
+} from 'lucide-react';
+import RunzaLogo from '../components/RunzaLogo';
 import {
   githubInstallUrl,
   listRepos,
@@ -27,6 +37,48 @@ const STATUS_COLORS: Record<string, string> = {
   running: '#2B4BF2',
   queued: '#8A92C0',
 };
+
+function StatTile({ label, value, hint }: { label: string; value: string; hint?: string }) {
+  return (
+    <div className="rounded-2xl border border-black/5 bg-white p-5">
+      <p className="fb-mono m-0 text-[10px] tracking-[2px] text-[#8A92C0] uppercase">
+        {label}
+      </p>
+      <p className="fb-serif m-0 mt-2 text-[1.75rem] leading-none text-[#131B4D]">
+        {value}
+      </p>
+      {hint && <p className="m-0 mt-2 text-xs text-[#8A92C0]">{hint}</p>}
+    </div>
+  );
+}
+
+function InstallationBadge({ installationId }: { installationId: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <div className="mt-5 flex flex-wrap items-center gap-2 rounded-xl bg-[#EEF2FE] px-4 py-3">
+      <span className="text-xs font-medium text-[#3D4577]">Installation ID</span>
+      <code className="fb-mono text-xs text-[#131B4D]">{installationId}</code>
+      <button
+        type="button"
+        onClick={() => {
+          navigator.clipboard.writeText(installationId);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 1500);
+        }}
+        className="text-[#8A92C0] transition hover:text-[#2B4BF2]"
+        aria-label="Copy installation ID">
+        {copied ? <Check size={14} color="#2F8F5B" /> : <Copy size={14} />}
+      </button>
+      <a
+        href={`https://github.com/settings/installations/${installationId}`}
+        target="_blank"
+        rel="noreferrer"
+        className="ml-auto inline-flex items-center gap-1 text-xs font-medium text-[#2B4BF2] no-underline hover:underline">
+        Manage on GitHub <ExternalLink size={12} />
+      </a>
+    </div>
+  );
+}
 
 function DashboardPage() {
   const navigate = useNavigate();
@@ -79,148 +131,186 @@ function DashboardPage() {
     };
   }, [installation_id, navigate]);
 
-  if (loading || !user) {
-    return (
-      <main className="flex min-h-[50vh] items-center justify-center">
-        <p className="fb-mono text-[11px] tracking-[2px] text-[#8A92C0] uppercase">
-          Loading…
-        </p>
-      </main>
-    );
-  }
-
-  const connected = Boolean(user.githubInstallationId);
+  const connected = Boolean(user?.githubInstallationId);
 
   return (
-    <main className="px-4 py-10 sm:px-8 sm:py-14">
-      <div className="mx-auto max-w-6xl">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="fb-mono mb-2 text-[11px] tracking-[2px] text-[#8A92C0] uppercase">
-              Dashboard
-            </p>
-            <h1 className="fb-serif m-0 text-[2rem] leading-[1.15] text-[#131B4D]">
-              Welcome, {user.name.split(' ')[0]}.
-            </h1>
+    <div className="flex min-h-screen flex-col bg-[#F6F7FB]">
+      {/* Dashboard shell — intentionally separate from the landing chrome */}
+      <header className="sticky top-0 z-40 border-b border-black/5 bg-white/80 [backdrop-filter:blur(20px)_saturate(180%)]">
+        <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3 sm:px-8">
+          <Link to="/dashboard" className="no-underline" aria-label="Runza dashboard">
+            <RunzaLogo className="h-7 w-auto" />
+          </Link>
+          <span className="fb-mono rounded-full bg-[#EEF2FE] px-3 py-1 text-[10px] tracking-[2px] text-[#3D4577] uppercase">
+            Dashboard
+          </span>
+          <div className="ml-auto flex items-center gap-3">
+            {user && (
+              <span className="hidden text-sm text-[#545C8C] sm:inline">
+                {user.email}
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={() => {
+                logout();
+                navigate({ to: '/login' });
+              }}
+              className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-4 py-2 text-xs font-medium text-[#131B4D] transition hover:bg-black/5">
+              <LogOut size={13} /> Log out
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={() => {
-              logout();
-              navigate({ to: '/login' });
-            }}
-            className="rounded-full border border-black/10 bg-white px-4 py-2 text-xs font-medium text-[#131B4D] transition hover:bg-black/5">
-            Log out
-          </button>
         </div>
+      </header>
 
-        <div className="mt-8 grid gap-6 lg:grid-cols-2">
-          {/* GitHub connection */}
-          <section className="fb-bento-card bg-[#EEF2FE] p-8">
-            <div className="flex items-center gap-3">
-              <Github size={20} className="text-[#131B4D]" />
-              <h2 className="fb-serif m-0 text-xl text-[#131B4D]">GitHub</h2>
-              {connected && (
-                <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-xs font-semibold text-[#2F8F5B]">
-                  <CircleCheck size={14} /> Connected
-                </span>
-              )}
-            </div>
+      {loading || !user ? (
+        <main className="flex flex-1 items-center justify-center">
+          <p className="fb-mono text-[11px] tracking-[2px] text-[#8A92C0] uppercase">
+            Loading…
+          </p>
+        </main>
+      ) : (
+        <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-8">
+          <h1 className="fb-serif m-0 text-[2rem] leading-[1.15] text-[#131B4D]">
+            Welcome, {user.name.split(' ')[0]}.
+          </h1>
+          <p className="mt-2 text-sm text-[#545C8C]">
+            {connected
+              ? 'Every pull request in your connected repositories gets tested automatically.'
+              : 'Connect GitHub to start testing your pull requests.'}
+          </p>
 
-            {connected ? (
-              <>
-                <p className="mt-3 text-sm leading-relaxed text-[#545C8C]">
-                  Every pull request in these repositories gets tested
-                  automatically.
-                </p>
-                {githubError && (
-                  <p className="mt-3 text-[13px] text-[#C23B4B]" role="alert">
-                    {githubError}
-                  </p>
+          <div className="mt-8 grid gap-4 sm:grid-cols-3">
+            <StatTile
+              label="GitHub"
+              value={connected ? 'Connected' : 'Not connected'}
+              hint={connected ? `Installation ${user.githubInstallationId}` : 'Install the app to begin'}
+            />
+            <StatTile
+              label="Repositories"
+              value={connected ? String(repos.length) : '—'}
+              hint="Covered by the GitHub App"
+            />
+            <StatTile
+              label="Runs"
+              value={String(runs.length)}
+              hint="Triggered from pull requests"
+            />
+          </div>
+
+          <div className="mt-6 grid items-start gap-6 lg:grid-cols-5">
+            {/* GitHub connection */}
+            <section className="rounded-2xl border border-black/5 bg-white p-7 lg:col-span-2">
+              <div className="flex items-center gap-3">
+                <Github size={18} className="text-[#131B4D]" />
+                <h2 className="fb-serif m-0 text-lg text-[#131B4D]">GitHub</h2>
+                {connected && (
+                  <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-[#EAF6EF] px-3 py-1 text-xs font-semibold text-[#2F8F5B]">
+                    <CircleCheck size={13} /> Connected
+                  </span>
                 )}
-                <ul className="mt-4 space-y-2 p-0">
-                  {repos.map(repo => (
+              </div>
+
+              {connected ? (
+                <>
+                  {githubError && (
+                    <p className="mt-3 text-[13px] text-[#C23B4B]" role="alert">
+                      {githubError}
+                    </p>
+                  )}
+                  <ul className="mt-4 list-none space-y-2 p-0">
+                    {repos.map(repo => (
+                      <li
+                        key={repo.fullName}
+                        className="flex items-center gap-2 rounded-xl bg-[#F6F7FB] px-4 py-3 text-sm text-[#131B4D]">
+                        <span className="truncate font-medium">{repo.fullName}</span>
+                        {repo.private && (
+                          <Lock size={13} className="shrink-0 text-[#8A92C0]" />
+                        )}
+                        <a
+                          href={repo.htmlUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="ml-auto shrink-0 text-[#8A92C0] transition hover:text-[#2B4BF2]"
+                          aria-label={`Open ${repo.fullName} on GitHub`}>
+                          <ExternalLink size={14} />
+                        </a>
+                      </li>
+                    ))}
+                    {repos.length === 0 && !githubError && (
+                      <li className="rounded-xl bg-[#F6F7FB] px-4 py-3 text-sm text-[#545C8C]">
+                        No repositories in this installation yet.
+                      </li>
+                    )}
+                  </ul>
+                  {user.githubInstallationId && (
+                    <InstallationBadge installationId={user.githubInstallationId} />
+                  )}
+                </>
+              ) : (
+                <>
+                  <p className="mt-3 text-sm leading-relaxed text-[#545C8C]">
+                    Install the GitHub App on your repositories. Once connected,
+                    every PR triggers a test run with video evidence.
+                  </p>
+                  {githubError ? (
+                    <p className="mt-4 text-[13px] text-[#C23B4B]" role="alert">
+                      {githubError}
+                    </p>
+                  ) : (
+                    <a
+                      href={installUrl}
+                      className="fb-cta-glow fb-press mt-5 inline-flex items-center gap-2 rounded-full bg-[#2B4BF2] px-6 py-3 text-sm font-semibold text-white no-underline transition hover:brightness-95">
+                      <Github size={15} /> Connect GitHub
+                    </a>
+                  )}
+                </>
+              )}
+            </section>
+
+            {/* Runs */}
+            <section className="rounded-2xl border border-black/5 bg-white p-7 lg:col-span-3">
+              <div className="flex items-center gap-3">
+                <GitPullRequest size={18} className="text-[#131B4D]" />
+                <h2 className="fb-serif m-0 text-lg text-[#131B4D]">Recent runs</h2>
+              </div>
+              {runs.length === 0 ? (
+                <p className="mt-3 text-sm leading-relaxed text-[#545C8C]">
+                  No runs yet.{' '}
+                  {connected
+                    ? 'Open a pull request in a connected repository to start one.'
+                    : 'Connect GitHub to start testing your pull requests.'}
+                </p>
+              ) : (
+                <ul className="mt-4 list-none space-y-2 p-0">
+                  {runs.map(run => (
                     <li
-                      key={repo.fullName}
-                      className="flex items-center gap-2 rounded-xl bg-white px-4 py-3 text-sm text-[#131B4D]">
-                      <span className="font-medium">{repo.fullName}</span>
-                      {repo.private && (
-                        <Lock size={13} className="text-[#8A92C0]" />
-                      )}
-                      <a
-                        href={repo.htmlUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="ml-auto text-[#8A92C0] transition hover:text-[#2B4BF2]"
-                        aria-label={`Open ${repo.fullName} on GitHub`}>
-                        <ExternalLink size={14} />
-                      </a>
+                      key={run.id}
+                      className="flex items-center gap-3 rounded-xl bg-[#F6F7FB] px-4 py-3 text-sm">
+                      <span
+                        className="inline-block h-2 w-2 shrink-0 rounded-full"
+                        style={{
+                          background: STATUS_COLORS[run.status] ?? '#8A92C0',
+                        }}
+                      />
+                      <span className="truncate font-medium text-[#131B4D]">
+                        {run.repository ?? run.targetUrl}
+                        {run.pullRequest ? ` #${run.pullRequest}` : ''}
+                      </span>
+                      <span className="fb-mono ml-auto shrink-0 text-[11px] text-[#8A92C0] uppercase">
+                        {run.status}
+                      </span>
+                      <span className="hidden shrink-0 text-xs text-[#8A92C0] sm:inline">
+                        {new Date(run.createdAt).toLocaleString()}
+                      </span>
                     </li>
                   ))}
-                  {repos.length === 0 && !githubError && (
-                    <li className="rounded-xl bg-white px-4 py-3 text-sm text-[#545C8C]">
-                      No repositories in this installation yet.
-                    </li>
-                  )}
                 </ul>
-              </>
-            ) : (
-              <>
-                <p className="mt-3 text-sm leading-relaxed text-[#545C8C]">
-                  Install the GitHub App on your repositories. Once connected,
-                  every PR triggers a test run with video evidence.
-                </p>
-                {githubError ? (
-                  <p className="mt-4 text-[13px] text-[#C23B4B]" role="alert">
-                    {githubError}
-                  </p>
-                ) : (
-                  <a
-                    href={installUrl}
-                    className="fb-cta-glow fb-press mt-5 inline-flex items-center gap-2 rounded-full bg-[#2B4BF2] px-6 py-3 text-sm font-semibold text-white no-underline transition hover:brightness-95">
-                    <Github size={15} /> Connect GitHub
-                  </a>
-                )}
-              </>
-            )}
-          </section>
-
-          {/* Runs */}
-          <section className="fb-bento-card bg-white p-8">
-            <h2 className="fb-serif m-0 text-xl text-[#131B4D]">Recent runs</h2>
-            {runs.length === 0 ? (
-              <p className="mt-3 text-sm leading-relaxed text-[#545C8C]">
-                No runs yet.{' '}
-                {connected
-                  ? 'Open a pull request in a connected repository to start one.'
-                  : 'Connect GitHub to start testing your pull requests.'}
-              </p>
-            ) : (
-              <ul className="mt-4 space-y-2 p-0">
-                {runs.map(run => (
-                  <li
-                    key={run.id}
-                    className="flex items-center gap-3 rounded-xl border border-black/5 px-4 py-3 text-sm">
-                    <span
-                      className="inline-block h-2 w-2 shrink-0 rounded-full"
-                      style={{
-                        background: STATUS_COLORS[run.status] ?? '#8A92C0',
-                      }}
-                    />
-                    <span className="font-medium text-[#131B4D]">
-                      {run.repository ?? run.targetUrl}
-                      {run.pullRequest ? ` #${run.pullRequest}` : ''}
-                    </span>
-                    <span className="fb-mono ml-auto text-[11px] uppercase text-[#8A92C0]">
-                      {run.status}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
-        </div>
-      </div>
-    </main>
+              )}
+            </section>
+          </div>
+        </main>
+      )}
+    </div>
   );
 }

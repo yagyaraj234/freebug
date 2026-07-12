@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import AuthCard from '../components/auth/AuthCard';
-import { errorCode, signup } from '../lib/auth';
+import { errorCode, signup, useRedirectIfAuthed } from '../lib/auth';
 
 export const Route = createFileRoute('/signup')({ component: SignupPage });
 
 const ERRORS: Record<string, string> = {
   email_taken: 'An account with this email already exists.',
-  invalid_request: 'Check your details — password must be at least 8 characters.',
+  invalid_request:
+    'Check your details — password must be at least 8 characters.',
 };
 
 function SignupPage() {
+  useRedirectIfAuthed();
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -26,7 +28,9 @@ function SignupPage() {
       await signup(name, email, password);
       navigate({ to: '/dashboard' });
     } catch (err) {
-      setError(ERRORS[errorCode(err)] ?? 'Something went wrong. Please try again.');
+      setError(
+        ERRORS[errorCode(err)] ?? 'Something went wrong. Please try again.'
+      );
       setLoading(false);
     }
   }
@@ -34,7 +38,7 @@ function SignupPage() {
   return (
     <AuthCard
       title="Create your account."
-      subtitle="Free forever. No credit card required."
+      subtitle="Free to Start. No credit card required."
       footer={
         <>
           Already have an account?{' '}

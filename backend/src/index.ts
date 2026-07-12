@@ -13,7 +13,7 @@ import { RunPipeline } from './pipeline.js';
 import { OpenAIPlanner } from './planner.js';
 import { PlaywrightExecutor } from './runner.js';
 import { MemoryRunStore } from './store.js';
-import { ConvexUserStore, MemoryUserStore } from './users.js';
+import { ConvexUserStore, SqliteUserStore } from './users.js';
 import { GitHubApp } from './github-app.js';
 const config = loadConfig(),
   store = new MemoryRunStore(),
@@ -55,7 +55,7 @@ new RunPipeline({
 }).start();
 const users = config.CONVEX_URL
   ? new ConvexUserStore(config.CONVEX_URL, config.AUTH_BRIDGE_SECRET)
-  : new MemoryUserStore();
+  : new SqliteUserStore(resolve(config.USERS_DB_PATH));
 const githubApp = new GitHubApp(
   config.GITHUB_APP_ID,
   config.GITHUB_PRIVATE_KEY_PATH,

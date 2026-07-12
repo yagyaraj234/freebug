@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import AuthCard from '../components/auth/AuthCard';
-import { errorCode, login } from '../lib/auth';
+import { errorCode, login, useRedirectIfAuthed } from '../lib/auth';
 
 export const Route = createFileRoute('/login')({ component: LoginPage });
 
@@ -10,6 +10,7 @@ const ERRORS: Record<string, string> = {
 };
 
 function LoginPage() {
+  useRedirectIfAuthed();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

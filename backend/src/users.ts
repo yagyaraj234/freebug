@@ -1,3 +1,7 @@
+import { mkdirSync } from 'node:fs'
+import { dirname } from 'node:path'
+import { DatabaseSync } from 'node:sqlite'
+
 export interface User {
   email: string
   name: string
@@ -33,6 +37,50 @@ export class MemoryUserStore implements UserStore {
     for (const user of this.users.values())
       if (user.githubInstallationId === installationId) return { ...user }
     return undefined
+  }
+}
+
+export class SqliteUserStore implements UserStore {
+  private readonly db: DatabaseSync
+  constructor(path: string) {
+    if (path !== ':memory:') mkdirSync(dirname(path), { recursive: true })
+    this.db = new DatabaseSync(path)
+    this.db.exec(`CREATE TABLE IF NOT EXISTS users (
+      email TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      password_hash TEXT NOT NULL,
+      github_installation_id TEXT,
+      created_at TEXT NOT NULL
+    )`)
+  }
+  private toUser(row: Record<string, unknown> | undefined): User | undefined {
+    if (!row) return undefined
+    return {
+      email: row.email as string,
+      name: row.name as string,
+      passwordHash: row.password_hash as string,
+      githubInstallationId: (row.github_installation_id as string | null) ?? undefined,
+      createdAt: row.created_at as string,
+    }
+  }
+  async create(user: User) {
+    try {
+      this.db.prepare('INSERT INTO users (email, name, password_hash, github_installation_id, created_at) VALUES (?, ?, ?, ?, ?)')
+        .run(user.email, user.name, user.passwordHash, user.githubInstallationId ?? null, user.createdAt)
+      return { created: true }
+    } catch {
+      return { created: false }
+    }
+  }
+  async getByEmail(email: string) {
+    return this.toUser(this.db.prepare('SELECT * FROM users WHERE email = ?').get(email) as Record<string, unknown> | undefined)
+  }
+  async setInstallation(email: string, installationId: string) {
+    const result = this.db.prepare('UPDATE users SET github_installation_id = ? WHERE email = ?').run(installationId, email)
+    if (result.changes === 0) throw new Error(`User ${email} not found`)
+  }
+  async getByInstallation(installationId: string) {
+    return this.toUser(this.db.prepare('SELECT * FROM users WHERE github_installation_id = ?').get(installationId) as Record<string, unknown> | undefined)
   }
 }
 

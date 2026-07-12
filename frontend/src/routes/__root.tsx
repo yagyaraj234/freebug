@@ -59,7 +59,10 @@ export const Route = createRootRoute({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   const { pathname } = useLocation();
-  const isAuthPage = pathname === '/login' || pathname === '/signup';
+  const isAuthPage =
+    pathname === '/login' ||
+    pathname === '/signup' ||
+    pathname.startsWith('/dashboard');
 
   return (
     <html lang="en" suppressHydrationWarning>

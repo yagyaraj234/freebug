@@ -172,7 +172,7 @@ export function Hero() {
         </a>
 
         <p className="fb-mono mt-4 text-[11px] tracking-[2px] text-[#8A92C0] uppercase">
-          Free forever. No credit card required.
+          Free to Start. No credit card required.
         </p>
       </div>
     </section>
@@ -563,7 +563,7 @@ export function FinalCta() {
           Stop writing Playwright tests by hand.
         </h2>
         <p className="mx-auto mb-8 max-w-md text-sm text-[#545C8C]">
-          Free forever. No credit card required.
+          Free to Start. No credit card required.
         </p>
         <a
           href="/signup"

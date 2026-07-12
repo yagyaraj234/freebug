@@ -1,3 +1,6 @@
+import { useEffect } from 'react'
+import { useNavigate } from '@tanstack/react-router'
+
 const base = ((import.meta as ImportMeta & { env?: { VITE_API_URL?: string } }).env?.VITE_API_URL ?? 'http://localhost:3001').replace(/\/$/, '')
 
 export interface AuthUser {
@@ -78,3 +81,11 @@ export const listRepos = async () => (await request<{ repos: Repo[] }>('/v1/gith
 export const listRuns = async () => (await request<{ runs: Run[] }>('/v1/runs')).runs
 
 export const errorCode = (error: unknown) => (error instanceof ApiError ? error.code : 'request_failed')
+
+// Public pages bounce logged-in users to the dashboard.
+export function useRedirectIfAuthed() {
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (getToken()) navigate({ to: '/dashboard' })
+  }, [navigate])
+}
