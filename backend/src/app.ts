@@ -27,6 +27,7 @@ const CreateRunSchema = z.object({
   targetUrl: z.string().url(),
   repository: z.string().optional(),
   pullRequest: z.number().int().positive().optional(),
+  installationId: z.string().optional(),
   email: z.string().trim().toLowerCase().email().optional(),
   model: z
     .object({ baseUrl: z.string().url(), model: z.string().min(1) })
@@ -106,6 +107,7 @@ export function createApp(deps: {
       targetUrl: input.targetUrl,
       repository: input.repository,
       pullRequest: input.pullRequest,
+      installationId: input.installationId,
       email: accountKey,
       billingAccountKey: accountKey,
       billingReservationId: deps.billing ? id : undefined,
@@ -382,6 +384,7 @@ export function createApp(deps: {
       targetUrl,
       repository: payload.repository.full_name,
       pullRequest: payload.pull_request.number,
+      installationId: payload.installation ? String(payload.installation.id) : undefined,
       email: owner?.email,
     });
     return c.json(

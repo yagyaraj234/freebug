@@ -60,4 +60,13 @@ export class GitHubApp {
     )
     return result.repositories.map(repo => ({ fullName: repo.full_name, private: repo.private, htmlUrl: repo.html_url }))
   }
+
+  async createIssueComment(installationId: string, repoFullName: string, issueNumber: number, body: string): Promise<void> {
+    const token = await this.installationToken(installationId)
+    await this.api(`/repos/${repoFullName}/issues/${issueNumber}/comments`, token, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ body }),
+    })
+  }
 }

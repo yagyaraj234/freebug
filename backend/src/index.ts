@@ -9,7 +9,7 @@ import { DodoBillingProvider } from './billing/dodo.js';
 import { MemoryBillingStore } from './billing/store.js';
 import { loadConfig } from './config.js';
 import { InMemoryEventBus } from './events.js';
-import { ConsoleNotifier, SmtpNotifier } from './notifier.js';
+import { ConsoleNotifier, GitHubCommentNotifier, SmtpNotifier } from './notifier.js';
 import { RunPipeline } from './pipeline.js';
 import { OpenAIPlanner } from './planner.js';
 import { CompositePlanner } from './composite-planner.js';
@@ -42,9 +42,17 @@ const billing = config.BILLING_ENABLED
       }),
     }
   : undefined;
-const notifier = config.SMTP_URL
+const githubApp = new GitHubApp(
+  config.GITHUB_APP_ID,
+  config.GITHUB_PRIVATE_KEY_PATH,
+  config.GITHUB_APP_SLUG
+);
+const baseNotifier = config.SMTP_URL
   ? new SmtpNotifier(config.SMTP_URL, config.SMTP_FROM)
   : new ConsoleNotifier();
+const notifier = githubApp.configured
+  ? new GitHubCommentNotifier(baseNotifier, githubApp)
+  : baseNotifier;
 const roles = config.PLANNER_AGENTS.split(',').map(role => role.trim()).filter(Boolean);
 const planner = new CompositePlanner(roles.map(role => new OpenAIPlanner(config.OPENAI_API_KEY, role)));
 const localExecutor = new PlaywrightExecutor(artifacts);
@@ -64,11 +72,6 @@ new RunPipeline({
 const users = config.CONVEX_URL
   ? new ConvexUserStore(config.CONVEX_URL, config.AUTH_BRIDGE_SECRET)
   : new SqliteUserStore(resolve(config.USERS_DB_PATH));
-const githubApp = new GitHubApp(
-  config.GITHUB_APP_ID,
-  config.GITHUB_PRIVATE_KEY_PATH,
-  config.GITHUB_APP_SLUG
-);
 const app = createApp({ config, store, events, users, githubApp, billing });
 serve({ fetch: app.fetch, port: config.PORT }, info =>
   console.log(`Freebug backend: http://localhost:${info.port}`)
