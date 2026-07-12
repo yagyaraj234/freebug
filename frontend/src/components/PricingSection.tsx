@@ -1,22 +1,15 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { CircleCheck, Zap } from 'lucide-react';
-import { createCheckout, fetchPlans, type PublicPlan } from '../lib/billing';
+import { createCheckout, plans, type PublicPlan } from '../lib/billing';
 import { me } from '../lib/auth';
 
 export function PricingSection() {
-  const [plans, setPlans] = useState<PublicPlan[]>([]);
   const [email, setEmail] = useState('');
   const [signedIn, setSignedIn] = useState(false);
-  const [message, setMessage] = useState('Loading plans…');
+  const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    fetchPlans()
-      .then(p => {
-        setPlans(p);
-        setMessage(p.length ? '' : 'Billing is unavailable.');
-      })
-      .catch(() => setMessage('Could not load plans. Please try again later.'));
     me().then(user => {
       if (user) {
         setEmail(user.email);
