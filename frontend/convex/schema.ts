@@ -11,7 +11,13 @@ export default defineSchema({
     text: v.string(),
     completed: v.boolean(),
   }),
-  waitlist: defineTable({
+  users: defineTable({
     email: v.string(),
-  }).index('by_email', ['email']),
+    name: v.string(),
+    passwordHash: v.string(),
+    githubInstallationId: v.optional(v.string()),
+    createdAt: v.string(),
+  })
+    .index('by_email', ['email'])
+    .index('by_installation', ['githubInstallationId']),
 })

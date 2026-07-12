@@ -27,15 +27,29 @@ describe('Freebug API', () => {
     await new Promise((resolve) => setTimeout(resolve, 0))
     expect(body.run.model.model).toBe('custom-model'); expect(seen).toEqual([body.run.id])
   })
-  it('adds a normalized email to the waitlist', async () => {
+  it('signs up, logs in, and rejects bad credentials', async () => {
     const { app } = setup()
-    const response = await app.request('/v1/waitlist', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email: ' Person@Example.COM ' }) })
-    expect(response.status).toBe(201)
-    expect(await response.json()).toMatchObject({ email: 'person@example.com', joined: true })
+    const signup = await app.request('/v1/auth/signup', json({ name: 'Ada', email: ' Person@Example.COM ', password: 'password123' }))
+    expect(signup.status).toBe(201)
+    const created = await signup.json() as any
+    expect(created.user).toEqual({ email: 'person@example.com', name: 'Ada', githubInstallationId: null })
+    expect(typeof created.token).toBe('string')
 
-    const duplicate = await app.request('/v1/waitlist', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email: 'person@example.com' }) })
-    expect(duplicate.status).toBe(200)
-    expect(await duplicate.json()).toMatchObject({ email: 'person@example.com', joined: false })
+    const duplicate = await app.request('/v1/auth/signup', json({ name: 'Ada', email: 'person@example.com', password: 'password123' }))
+    expect(duplicate.status).toBe(409)
+
+    const login = await app.request('/v1/auth/login', json({ email: 'person@example.com', password: 'password123' }))
+    expect(login.status).toBe(200)
+    const { token } = await login.json() as any
+
+    const me = await app.request('/v1/auth/me', { headers: { authorization: `Bearer ${token}` } })
+    expect(me.status).toBe(200)
+    expect((await me.json() as any).user.email).toBe('person@example.com')
+
+    const bad = await app.request('/v1/auth/login', json({ email: 'person@example.com', password: 'wrong-password' }))
+    expect(bad.status).toBe(401)
+    const anon = await app.request('/v1/auth/me')
+    expect(anon.status).toBe(401)
   })
 
   it('rejects an invalid GitHub signature', async () => {

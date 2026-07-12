@@ -42,7 +42,7 @@ export default function Header() {
             Log in
           </Link>
           <Link
-            to="/waitlist"
+            to="/signup"
             className="fb-press rounded-full bg-[#2B4BF2] px-4 py-2 text-xs font-semibold text-[#FFFFFF] no-underline transition hover:brightness-95">
             Get Access
           </Link>

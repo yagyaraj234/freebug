@@ -1,9 +1,36 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { useState } from 'react';
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import AuthCard from '../components/auth/AuthCard';
+import { errorCode, signup } from '../lib/auth';
 
 export const Route = createFileRoute('/signup')({ component: SignupPage });
 
+const ERRORS: Record<string, string> = {
+  email_taken: 'An account with this email already exists.',
+  invalid_request: 'Check your details — password must be at least 8 characters.',
+};
+
 function SignupPage() {
+  const navigate = useNavigate();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  async function onSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    setError('');
+    setLoading(true);
+    try {
+      await signup(name, email, password);
+      navigate({ to: '/dashboard' });
+    } catch (err) {
+      setError(ERRORS[errorCode(err)] ?? 'Something went wrong. Please try again.');
+      setLoading(false);
+    }
+  }
+
   return (
     <AuthCard
       title="Create your account."
@@ -18,7 +45,7 @@ function SignupPage() {
           </Link>
         </>
       }>
-      <form className="space-y-4" onSubmit={e => e.preventDefault()}>
+      <form className="space-y-4" onSubmit={onSubmit}>
         <div>
           <label
             htmlFor="name"
@@ -29,7 +56,10 @@ function SignupPage() {
             id="name"
             type="text"
             required
+            autoComplete="name"
             placeholder="Ada Lovelace"
+            value={name}
+            onChange={e => setName(e.target.value)}
             className="fb-input"
           />
         </div>
@@ -43,7 +73,10 @@ function SignupPage() {
             id="email"
             type="email"
             required
+            autoComplete="email"
             placeholder="you@company.com"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
             className="fb-input"
           />
         </div>
@@ -57,28 +90,26 @@ function SignupPage() {
             id="password"
             type="password"
             required
-            placeholder="••••••••"
+            minLength={8}
+            autoComplete="new-password"
+            placeholder="At least 8 characters"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
             className="fb-input"
           />
         </div>
+        {error && (
+          <p className="m-0 text-[13px] text-[#C23B4B]" role="alert">
+            {error}
+          </p>
+        )}
         <button
           type="submit"
-          className="fb-cta-glow mt-2 w-full rounded-full bg-[#2B4BF2] py-3 text-sm font-semibold text-[#FFFFFF] transition hover:brightness-95">
-          Request access
+          disabled={loading}
+          className="fb-cta-glow mt-2 w-full rounded-full bg-[#2B4BF2] py-3 text-sm font-semibold text-[#FFFFFF] transition hover:brightness-95 disabled:opacity-70">
+          {loading ? 'Creating account…' : 'Create account'}
         </button>
       </form>
-
-      <div className="my-5 flex items-center gap-3">
-        <span className="h-px flex-1 bg-black/10" />
-        <span className="fb-mono text-[11px] uppercase text-[#8A92C0]">or</span>
-        <span className="h-px flex-1 bg-black/10" />
-      </div>
-
-      <button
-        type="button"
-        className="w-full rounded-full border border-black/10 bg-white py-3 text-sm font-medium text-[#131B4D] transition hover:bg-black/5">
-        Continue with Google
-      </button>
     </AuthCard>
   );
 }
